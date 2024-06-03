@@ -1,0 +1,151 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Cadastrar" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                        <button pButton pRipple label="Desativar" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedEmpresas()" [disabled]="!selectedEmpresas || !selectedEmpresas.length"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload> -->
+                    <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help" (click)="dt.exportCSV()"></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="empresas" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['cnpj','fantasia','razsoc','status']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedEmpresas" selectionMode="multiple" [rowHover]="true" dataKey="cnpj">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Empresas Cadastradas:</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Procurar..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="cnpj">Cnpj <p-sortIcon field="cnpj"></p-sortIcon></th>
+                        <th pSortableColumn="fantasia">Nome Fantasia <p-sortIcon field="fantasia"></p-sortIcon></th>
+                        <th pSortableColumn="razsoc">Razão Social <p-sortIcon field="razsoc"></p-sortIcon></th>
+                        <th>Telefone </th>
+                        <th>E-mail</th>
+                        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-empresa>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="empresa"></p-tableCheckbox>
+                        </td>
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Cnpj</span>
+                            {{empresa.cnpj}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Fantasia</span>
+                            {{empresa.fantasia}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">Razão Social</span>
+                            {{empresa.razsoc}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Telefone</span>
+                            {{empresa.telefone}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">E-mail</span>
+                            {{empresa.email}}
+                        </td>
+
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">Status</span>
+                            <span [class]="'product-badge status-' + (empresa.status === 1? 'instock' : 'outofstock')">{{empresa.status === 1? 'Ativo' : 'Inativo'}}</span>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editEmpresa(empresa)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteEmpresa(empresa)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="empresaDialog" [style]="{width: '450px'}" header="empresa Details" [modal]="true" class="p-fluid">
+            <ng-template pTemplate="content">
+                <!-- <img [src]="'assets/demo/images/empresa/' + empresa.image" [alt]="empresa.image" width="150" class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="empresa.image"> -->
+                <div class="field">
+                    <label for="cnpj">CNPJ</label>
+                    <p-inputMask id="cnpj" name="cnpj" mask="99.999.999/9999-99" [(ngModel)]="empresa.cnpj" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !empresa.cnpj}" [disabled]="edit"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !empresa.cnpj">CNPJ é obrigatório.</small>
+                </div>
+                <div class="field">
+                    <label for="fantasia">Nome Fantasia</label>
+                    <input type="text" pInputText id="fantasia" [(ngModel)]="empresa.fantasia" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !empresa.fantasia}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !empresa.fantasia">Nome Fantasia é obrigatório.</small>
+                </div>
+                <div class="field">
+                    <label for="razsoc">Razão Social</label>
+                    <input type="text" pInputText id="razsoc" [(ngModel)]="empresa.razsoc" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !empresa.razsoc}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !empresa.razsoc">Razão Social é obrigatório.</small>
+                </div>
+                <div class="field">
+                    <label for="email">E-Mail</label>
+                    <input type="text" pInputText id="email" [(ngModel)]="empresa.email" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !empresa.email}"/>
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !empresa.email">E-Mail é obrigatório.</small>
+                </div>
+                <div class="field">
+                    <label for="telefone">Telefone</label>
+                    <p-inputMask id="telefone" name="telefone" mask="(99) 9999-9999" [(ngModel)]="empresa.telefone" required autofocus [ngClass]="{'ng-invalid ng-dirty' : submitted && !empresa.telefone}" />
+                    <small class="ng-dirty ng-invalid" *ngIf="submitted && !empresa.telefone">Telefone é obrigatório.</small>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+                <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEmpresa()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="reativeEmpresaDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="empresa">Tem certeza gostaria de reativar a <b>{{empresa.fantasia}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Não" (click)="reativeEmpresaDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sim" (click)="confirmReativeEmpresa()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteEmpresaDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span *ngIf="empresa">Tem certeza gostaria de desativar <b>{{empresa.fantasia}}</b>?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="Não" (click)="deleteEmpresaDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Sim" (click)="confirmDelete()"></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog [(visible)]="deleteEmpresasDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
+                <span>Tem certeza gostaria de desativar as empresas selecionadas?</span>
+            </div>
+            <ng-template pTemplate="footer">
+                <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No" (click)="deleteempresasDialog = false"></button>
+                <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDeleteSelected()"></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+{
+  "empresa": [
+    {
+      "id": "89663007-2a00-4805-ab81-0b28836e5aed",
+      "cnpj": "16.967.308/0001-40",
+      "fantasia": "Joselito pao e vinho Jose",
+      "razsoc": "teste - teste",
+      "telefone": "5599999999",
+      "email": "testando@gmail.com",
+      "status": 1
+    },
+    {
+      "id": "b268c7d4-6f3a-4026-b6a3-6bb401fe4e7c",
+      "cnpj": "33.226.051/0001-95",
+      "fantasia": "Fornecedor - Empresa Jose",
+      "razsoc": "Forn Jose Raz",
+      "telefone": "5599999999",
+      "email": "teste@gmail.com",
+      "status": 2
+    }
+  ]
+}

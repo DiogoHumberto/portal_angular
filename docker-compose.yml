@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  angular-app:
+    image: diogohumberto/app-angular:latest
+    #build:
+      #context: .
+      #dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - json-server
+
+  json-server:
+    image: diogohumberto/json-server-angular:latest
+    #build:
+      #context: ./backend
+      #dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
