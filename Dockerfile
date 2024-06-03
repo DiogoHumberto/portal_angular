@@ -22,6 +22,8 @@ FROM nginx:alpine
 # Copie os arquivos construídos para o diretório padrão do Nginx
 COPY --from=build /app/dist/angular-portal /usr/share/nginx/html
 
+COPY nginx/angular-app.conf /etc/nginx/conf.d
+
 # Exponha a porta em que o Nginx estará rodando
 EXPOSE 80
 

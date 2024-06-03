@@ -1,20 +1,17 @@
 # Use uma imagem Node.js com a versão 18.13 ou superior como base
 FROM node:18.13-alpine
 
-# Defina o diretório de trabalho
+# Criar diretório de trabalho
 WORKDIR /app
 
-# Copie o package.json e o package-lock.json para o diretório de trabalho
-COPY package*.json ./
+# Instalar json-server globalmente
+RUN npm install -g json-server
 
-# Instale as dependências
-RUN npm install json-server --save
+# Copiar db.json para o contêiner
+COPY db.json .
 
-# Copie o restante do código do json-server
-COPY . .
-
-# Exponha a porta em que o json-server estará rodando
+# Expor a porta do json-server
 EXPOSE 3000
 
-# Comando para rodar o json-server
-CMD ["npm", "start"]
+# Comando para iniciar o json-server
+CMD ["json-server", "--watch", "db.json"]

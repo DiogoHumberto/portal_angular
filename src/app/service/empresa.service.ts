@@ -6,7 +6,11 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class EmpresaService {
 
-    private readonly apiUrl = 'http://localhost:3000/empresa';
+    //private readonly apiUrl = 'http://localhost:3000/empresa';
+
+    private readonly apiUrl = '/api/empresa';
+
+    //private readonly apiUrl = 'http://json-server:3000/empresa';
 
     constructor(private http: HttpClient) { }
 
