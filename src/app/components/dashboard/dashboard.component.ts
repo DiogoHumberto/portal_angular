@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     redirect(): void {
-        this.router.navigate(['/pages/empresa']);
+        this.router.navigate(['/home']);
       }
 
     onGlobalFilter(table: Table, event: Event) {

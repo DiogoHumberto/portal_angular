@@ -13,6 +13,7 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
                     { path: 'pages', loadChildren: () => import('./components/pages/pages.module').then(m => m.PagesModule) }
                 ]
             },
+            { path: 'home', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
             { path: 'notfound', component: NotfoundComponent },
             { path: '**', redirectTo: '/notfound' },
